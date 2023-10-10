@@ -19,8 +19,11 @@ const char* clientID = "DzkQOw0wMRUeBREaMQE7Hg0";
 WiFiClient client;
 PubSubClient mqttClient(client);
 
+Adafruit_BMP280 bmp;
 
-void mqttPublish(long pubChannelID, char* pubWriteAPIKey, float dataValue1, float dataValue2, float dataValue3, float dataValue4) {
+
+
+void mqttPublish(long pubChannelID, char* pubWriteAPIKey, float dataValue1, float dataValue2, float dataValue3, float dataValue4,float data5,float data6) {
   String topicString = "channels/" + String(pubChannelID) + "/publish";
   String dataString = "field1=" + String(dataValue1, 2);
   dataString+= "&field2=";
@@ -29,6 +32,10 @@ void mqttPublish(long pubChannelID, char* pubWriteAPIKey, float dataValue1, floa
   dataString+= String(dataValue3, 2);
   dataString+= "&field4=";
   dataString+= String(dataValue4, 2);
+  dataString+= "&field5=";
+  dataString+= String(data5, 2);
+  dataString+= "&field6=";
+  dataString+= String(data6, 2);
   Serial.println(topicString);
   Serial.println(dataString);
   mqttClient.publish(topicString.c_str(), dataString.c_str());
@@ -53,10 +60,12 @@ void setup() {
     delay(1000);
     Serial.println("Connecting to WiFi...");
   }
+  
 
   Serial.print("Local IP address: ");
   Serial.println(WiFi.localIP());
   mqttClient.setServer(server, 1883);
+  bmp.begin(0x76,0x58);
 }
 
 int temp_var=0;
@@ -106,6 +115,18 @@ void loop() {
   Serial.print("Sensor Value: ");
   Serial.println(sensorValueMQ135);
 
+  /// BME
+
+  float pressure = bmp.readPressure();
+  float alt = bmp.readAltitude();
+
+  Serial.println("BMP:");
+  Serial.print("Pressure: ");
+  Serial.println(pressure);
+Serial.print("Altitude: ");
+  Serial.println(alt);  
+
+
 
   if(temperatureDHT>45)
   temp_var++;
@@ -138,7 +159,7 @@ void loop() {
   }
 
   Serial.println();
-  mqttPublish(ChannelID, APIKey, temperatureDHT, humidityDHT, sensorValueMQ2, sensorValueMQ135);
+  mqttPublish(ChannelID, APIKey, temperatureDHT, humidityDHT, sensorValueMQ2, sensorValueMQ135,pressure,alt);
   delay(2000); // Wait for 2 seconds before taking the next reading
 
 }
