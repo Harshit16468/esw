@@ -7,13 +7,43 @@
  */
 
 #include <WiFi.h>
-
+#include <ThingSpeak.h>
+#include <PubSubClient.h>
 #define SERVER_PORT 4080
 
 const char* ssid = "me20p";     // CHANGE TO YOUR WIFI SSID
 const char* password = "987654321"; // CHANGE TO YOUR WIFI PASSWORD
+int ChannelID = 2287708;
+char* APIKey = "4WTZWUBW20DBD1JT";
+const char* server = "mqtt3.thingspeak.com";
+char mqttUserName[] = "DzkQOw0wMRUeBREaMQE7Hg0";
+char mqttPass[] = "A3aGJ7uZlQgw4JzZunWvwN/0";
+const char* clientID = "DzkQOw0wMRUeBREaMQE7Hg0";
 
+const char* serverAddress = "http://127.0.0.1:8000/post_endpoint";
+WiFiClient client;
+PubSubClient mqttClient(client);
 WiFiServer TCPserver(SERVER_PORT);
+
+void mqttPublish(long pubChannelID, char* pubWriteAPIKey, float dataValue1, float dataValue2, float dataValue3, float dataValue4,float data5,float data6) {
+  String topicString = "channels/" + String(pubChannelID) + "/publish";
+  String dataString = "field1=" + String(dataValue1, 2);
+  dataString+= "&field2=";
+  dataString+= String(dataValue2, 2);
+  dataString+= "&field3=";
+  dataString+= String(dataValue3, 2);
+  dataString+= "&field4=";
+  dataString+= String(dataValue4, 2);
+  dataString+= "&field5=";
+  dataString+= String(data5, 2);
+  dataString+= "&field6=";
+  dataString+= String(data6, 2);
+  Serial.println(topicString);
+  Serial.println(dataString);
+  mqttClient.publish(topicString.c_str(), dataString.c_str());
+  Serial.println(pubChannelID);
+}
+
 
 void setup() {
   Serial.begin(115200);
@@ -30,7 +60,7 @@ void setup() {
   Serial.print("ESP32 #2: TCP Server IP address: ");
   Serial.println(WiFi.localIP());
   Serial.println("ESP32 #2: -> Please update the serverAddress in ESP32 #1 code");
-
+  mqttClient.setServer(server, 1883);
   // Start listening for a TCP client (from ESP32 #1)
   TCPserver.begin();
 }
@@ -80,7 +110,16 @@ void loop() {
   Serial.println(pressure);
   Serial.print("Altitude: ");
   Serial.println(alt);  
+    if (!mqttClient.connected()) {
+    mqttClient.connect(clientID, mqttUserName, mqttPass);
+    delay(1000);
+    Serial.println("Connecting to Client...");
   }
+  mqttClient.loop();
+    mqttPublish(ChannelID, APIKey, temperature, humidity, mq2reading, mq135reading,pressure,alt);
     client.stop();
+  }
+
+  
   }
 }
