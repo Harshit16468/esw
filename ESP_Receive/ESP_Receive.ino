@@ -92,28 +92,28 @@ void loop() {
     float alt=atof(arg);
     
 
-     Serial.println("DHT11 Sensor  Data:");
-  Serial.print("Temperature: ");
-  Serial.print(temperature);
-  Serial.println(" °C");
-  Serial.print("Humidity: ");
-  Serial.print(humidity);
-  Serial.println(" %");
-   Serial.print("MQ-2 Sensor Data:");
-   Serial.print("Sensor Value: ");
-   Serial.println(mq2reading);
-   Serial.print("MQ-135 Sensor Data:");
-   Serial.print("Sensor Value: ");
-   Serial.println(mq135reading);
+    Serial.println("DHT11 Sensor  Data:");
+    Serial.print("Temperature: ");
+    Serial.print(temperature);
+    Serial.println(" °C");
+    Serial.print("Humidity: ");
+    Serial.print(humidity);
+    Serial.println(" %");
+    Serial.print("MQ-2 Sensor Data:");
+    Serial.print("Sensor Value: ");
+    Serial.println(mq2reading);
+    Serial.print("MQ-135 Sensor Data:");
+    Serial.print("Sensor Value: ");
+    Serial.println(mq135reading);
     Serial.println("BMP:");
-  Serial.print("Pressure: ");
-  Serial.println(pressure);
-  Serial.print("Altitude: ");
-  Serial.println(alt);  
-    if (!mqttClient.connected()) {
-    mqttClient.connect(clientID, mqttUserName, mqttPass);
-    delay(1000);
-    Serial.println("Connecting to Client...");
+    Serial.print("Pressure: ");
+    Serial.println(pressure);
+    Serial.print("Altitude: ");
+    Serial.println(alt);  
+      if (!mqttClient.connected()) {
+      mqttClient.connect(clientID, mqttUserName, mqttPass);
+      delay(1000);
+      Serial.println("Connecting to Client...");
   }
   mqttClient.loop();
     mqttPublish(ChannelID, APIKey, temperature, humidity, mq2reading, mq135reading,pressure,alt);
