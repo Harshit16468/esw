@@ -9,7 +9,7 @@
 
 const char* ssid = "me20p";     // CHANGE TO YOUR WIFI SSID
 const char* password = "987654321"; // CHANGE TO YOUR WIFI PASSWORD
-const char* serverAddress = "192.168.27.222"; // CHANGE TO ESP32#2'S IP ADDRESS
+const char* serverAddress = "192.168.114.222"; // CHANGE TO ESP32#2'S IP ADDRESS
 const int serverPort = 4080;
 
 WiFiClient TCPclient;
@@ -92,13 +92,15 @@ void loop() {
 
   char buffer[1024];
   // Print DHT11 data
-  TCPclient.write("DHT11 Sensor  Data:");
-  TCPclient.write("Temperature: ");
-  TCPclient.write(temperatureDHT);
-  TCPclient.write(" °C");
-  TCPclient.write("Humidity: ");
-  TCPclient.write(humidityDHT);
-  TCPclient.write(" %");
+  // TCPclient.write("DHT11 Sensor  Data:");
+  // TCPclient.write("Temperature: ");
+  snprintf(buffer,sizeof(buffer),"%f,",temperatureDHT);
+  TCPclient.write(buffer);
+  // TCPclient.write(" °C");
+  // TCPclient.write("Humidity: ");
+  snprintf(buffer,sizeof(buffer),"%f,",humidityDHT);
+  TCPclient.write(buffer);
+  // TCPclient.write(" %");
 
   Serial.println("DHT11 Sensor  Data:");
   Serial.print("Temperature: ");
@@ -110,9 +112,10 @@ void loop() {
 
 
   // Print MQ-2 gas sensor data
-  TCPclient.write("MQ-2 Sensor Data:");
-  TCPclient.write("Sensor Value: ");
-  TCPclient.write(sensorValueMQ2);
+  // TCPclient.write("MQ-2 Sensor Data:");
+  snprintf(buffer,sizeof(buffer),"%f,",sensorValueMQ2);
+  // TCPclient.write("Sensor Value: ");
+  TCPclient.write(buffer);
 
    Serial.print("MQ-2 Sensor Data:");
    Serial.print("Sensor Value: ");
@@ -121,9 +124,10 @@ void loop() {
   // TCPclient.write(voltageMQ2, 2);
 
   // Print MQ-135 gas sensor data
-  TCPclient.write("MQ-135 Sensor Data:");
-  TCPclient.write("Sensor Value: ");
-  TCPclient.write(sensorValueMQ135);
+  // TCPclient.write("MQ-135 Sensor Data:");
+  // TCPclient.write("Sensor Value: ");
+  snprintf(buffer,sizeof(buffer),"%f,",sensorValueMQ135);
+  TCPclient.write(buffer);
 
    Serial.print("MQ-135 Sensor Data:");
    Serial.print("Sensor Value: ");
@@ -140,11 +144,13 @@ void loop() {
     float b= 1-a;
     alt=44330*b;
   }
-  TCPclient.write("BMP:");
-  TCPclient.write("Pressure: ");
-  TCPclient.write(pressure);
-  TCPclient.write("Altitude: ");
-  TCPclient.write(alt);  
+  // TCPclient.write("BMP:");
+  // TCPclient.write("Pressure: ");
+  snprintf(buffer,sizeof(buffer),"%f,",pressure);
+  TCPclient.write(buffer);
+  // TCPclient.write("Altitude: ");
+  snprintf(buffer,sizeof(buffer),"%f",alt);
+  TCPclient.write(buffer);  
 
   Serial.println("BMP:");
   Serial.print("Pressure: ");
@@ -165,22 +171,22 @@ void loop() {
   else
     mq135_var=0;
   
-  if(temp_var>=5 )
-  {
-    TCPclient.write("Abnormal Temperature");
-    delay(1000);    
-  }
-  if(mq2_var>=5 )
-  {
-    TCPclient.write("Smoke Detected");
-    delay(1000);    
-  }
-  if(mq135_var>=5)
-  {
-    TCPclient.write("Abnormal Co2 levels");
-    delay(1000);    
+  // if(temp_var>=5 )
+  // {
+  //   TCPclient.write("Abnormal Temperature");
+  //   delay(1000);    
+  // }
+  // if(mq2_var>=5 )
+  // {
+  //   TCPclient.write("Smoke Detected");
+  //   delay(1000);    
+  // }
+  // if(mq135_var>=5)
+  // {
+  //   TCPclient.write("Abnormal Co2 levels");
+  //   delay(1000);    
 
-  }
+  // }
 
  
   TCPclient.write("\n");

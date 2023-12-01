@@ -48,6 +48,38 @@ void loop() {
     buffer[bytesRead] = '\0'; // Null-terminate the buffer to make it a valid C-string
     Serial.print("ESP32 #2: - Received command: ");
     Serial.println(buffer);
+    char* arg=strtok(buffer,",");
+    float temperature=atof(arg);
+    arg=strtok(NULL,",");
+    float humidity=atof(arg);
+    arg=strtok(NULL,",");
+    float mq2reading=atof(arg);
+    arg=strtok(NULL,",");
+    float mq135reading=atof(arg);
+    arg=strtok(NULL,",");
+    float pressure=atof(arg);
+    arg=strtok(NULL,",");
+    float alt=atof(arg);
+    
+
+     Serial.println("DHT11 Sensor  Data:");
+  Serial.print("Temperature: ");
+  Serial.print(temperature);
+  Serial.println(" °C");
+  Serial.print("Humidity: ");
+  Serial.print(humidity);
+  Serial.println(" %");
+   Serial.print("MQ-2 Sensor Data:");
+   Serial.print("Sensor Value: ");
+   Serial.println(mq2reading);
+   Serial.print("MQ-135 Sensor Data:");
+   Serial.print("Sensor Value: ");
+   Serial.println(mq135reading);
+    Serial.println("BMP:");
+  Serial.print("Pressure: ");
+  Serial.println(pressure);
+  Serial.print("Altitude: ");
+  Serial.println(alt);  
   }
     client.stop();
   }
