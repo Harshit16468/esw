@@ -6,6 +6,7 @@
 #include <ThingSpeak.h>
 #include <WiFi.h>
 #include <PubSubClient.h>
+#include <HTTPClient.h>
 
 const char* ssid = "me20p";
 const char* password = "987654321";
@@ -16,6 +17,7 @@ char mqttUserName[] = "DzkQOw0wMRUeBREaMQE7Hg0";
 char mqttPass[] = "A3aGJ7uZlQgw4JzZunWvwN/0";
 const char* clientID = "DzkQOw0wMRUeBREaMQE7Hg0";
 
+const char* serverAddress = "http://127.0.0.1:8000/post_endpoint";
 WiFiClient client;
 PubSubClient mqttClient(client);
 
@@ -42,12 +44,36 @@ void mqttPublish(long pubChannelID, char* pubWriteAPIKey, float dataValue1, floa
   Serial.println(pubChannelID);
 }
 
-#define DHT_PIN 12 // Change this to the GPIO pin you connected your DHT11 sensor to
-#define DHT_TYPE DHT11
+// void httpPublish(){
+//   HTTPClient http;
+    
+//     // Prepare JSON data
+//     String jsonData = "{\"key1\":\"value1\",\"key2\":\"value2\"}";
 
+//     // Send a POST request
+//     http.begin(serverAddress);
+//     http.addHeader("Content-Type", "application/json");
+
+//     int httpResponseCode = http.POST(jsonData);
+
+//     if (httpResponseCode > 0) {
+//       String response = http.getString();
+//       Serial.println("HTTP Response Code: " + String(httpResponseCode));
+//       Serial.println("Response: " + response);
+//     } else {
+//       Serial.println("Error on HTTP request");
+//     }
+
+//     http.end();
+// }
+
+#define DHT_PIN 12 // Change this to the GPIO pin you connected your DHT11 sensor to
 #define MQ2_PIN 32 // The analog input pin connected to the DOUT pin of the MQ-2 sensor
 #define MQ135_PIN 33 // The analog input pin connected to the MQ-135 sensor
+#define SDA 21
+#define SCL 22
 
+#define DHT_TYPE DHT11
 DHT dht(DHT_PIN, DHT_TYPE);
 
 void setup() {
@@ -55,6 +81,7 @@ void setup() {
   dht.begin();
   pinMode(MQ2_PIN, INPUT);
   pinMode(MQ135_PIN, INPUT);
+  pinMode(DHT_PIN,INPUT);
   WiFi.begin(ssid,password);
   while (WiFi.status() != WL_CONNECTED) {
     delay(1000);
@@ -115,7 +142,7 @@ void loop() {
   Serial.print("Sensor Value: ");
   Serial.println(sensorValueMQ135);
 
-  /// BME
+  /// BMP
 
   float pressure = bmp.readPressure();
   float alt = bmp.readAltitude();
@@ -123,27 +150,27 @@ void loop() {
   Serial.println("BMP:");
   Serial.print("Pressure: ");
   Serial.println(pressure);
-Serial.print("Altitude: ");
+  Serial.print("Altitude: ");
   Serial.println(alt);  
 
 
 
   if(temperatureDHT>45)
-  temp_var++;
+    temp_var++;
   else 
-  temp_var=0;
+    temp_var=0;
   if(sensorValueMQ2>300)
-  mq2_var++;
+    mq2_var++;
   else
-  mq2_var=0;
+    mq2_var=0;
   if(sensorValueMQ135>1500)
-  mq135_var++;
+    mq135_var++;
   else
-  mq135_var=0;
+    mq135_var=0;
   
   if(temp_var>=5 )
   {
-    Serial.println("Abnormal Temperatur");
+    Serial.println("Abnormal Temperature");
     delay(1000);    
   }
   if(mq2_var>=5 )
@@ -160,6 +187,7 @@ Serial.print("Altitude: ");
 
   Serial.println();
   mqttPublish(ChannelID, APIKey, temperatureDHT, humidityDHT, sensorValueMQ2, sensorValueMQ135,pressure,alt);
-  delay(2000); // Wait for 2 seconds before taking the next reading
+  httpPublish();
+  delay(2000); 
 
 }

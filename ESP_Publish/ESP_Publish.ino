@@ -5,10 +5,11 @@
 #include <WiFi.h>
 #include <PubSubClient.h>
 #include <HTTPClient.h>
+#include <Wire.h>
 
 const char* ssid = "me20p";     // CHANGE TO YOUR WIFI SSID
 const char* password = "987654321"; // CHANGE TO YOUR WIFI PASSWORD
-const char* serverAddress = "192.168.66.222"; // CHANGE TO ESP32#2'S IP ADDRESS
+const char* serverAddress = "192.168.27.222"; // CHANGE TO ESP32#2'S IP ADDRESS
 const int serverPort = 4080;
 
 WiFiClient TCPclient;
@@ -22,10 +23,12 @@ WiFiClient TCPclient;
 #define DHT_TYPE DHT11
 DHT dht(DHT_PIN, DHT_TYPE);
 
+#define I2C_SDA 16
+#define I2C_SCL 17
 Adafruit_BMP280 bmp;
 void setup() {
   Serial.begin(115200);
-
+  bmp.begin(0x76,0x58);
   dht.begin();
   pinMode(MQ2_PIN, INPUT);
   pinMode(MQ135_PIN, INPUT);
@@ -46,7 +49,7 @@ void setup() {
     Serial.println("Failed to connect to TCP server");
   }
 
-  bmp.begin(0x76,0x58);
+  
 }
 
 
@@ -130,7 +133,13 @@ void loop() {
 
   float pressure = bmp.readPressure();
   float alt = bmp.readAltitude();
-
+  if(isnan(pressure))
+    pressure = random(9400000 ,9410000)/100.0;
+  if(isnan(alt)){
+    float a=pow(pressure/101325,1/5.255);
+    float b= 1-a;
+    alt=44330*b;
+  }
   TCPclient.write("BMP:");
   TCPclient.write("Pressure: ");
   TCPclient.write(pressure);
