@@ -137,15 +137,8 @@ void loop() {
 
   float pressure = bmp.readPressure();
   float alt = bmp.readAltitude();
-  if(isnan(pressure))
-    pressure = random(9400000 ,9410000)/100.0;
-  if(isnan(alt)){
-    float a=pow(pressure/101325,1/5.255);
-    float b= 1-a;
-    alt=44330*b;
-  }
-  // TCPclient.write("BMP:");
-  // TCPclient.write("Pressure: ");
+  TCPclient.write("BMP:");
+  TCPclient.write("Pressure: ");
   snprintf(buffer,sizeof(buffer),"%f,",pressure);
   TCPclient.write(buffer);
   // TCPclient.write("Altitude: ");
