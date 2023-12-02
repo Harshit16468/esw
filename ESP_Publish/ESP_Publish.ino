@@ -81,14 +81,14 @@ void loop() {
   // Read analog value from MQ-2 gas sensor
   float sensorValueMQ2 = analogRead(MQ2_PIN);
   float voltageMQ2 = (sensorValueMQ2 / 4095.0) * 5.0; // Convert ADC reading to voltage
-  sensorValueMQ2/=10;
+  // sensorValueMQ2/=10;
 
 
   // Read analog value from MQ-135 gas sensor
   float sensorValueMQ135 = analogRead(MQ135_PIN);
   // You can add code to interpret the sensor value from the MQ-135 here
   // Refer to the MQ-135 sensor datasheet for calibration and conversion factors
-  sensorValueMQ135/=2;
+  // sensorValueMQ135/=2;
 
   char buffer[1024];
   // Print DHT11 data
