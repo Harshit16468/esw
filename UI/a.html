@@ -4,12 +4,51 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dynamic ThingSpeak Charts</title>
+    <style>
+        body {
+            background: linear-gradient(to bottom, #000033, #000066);
+            color: #fff;
+            text-align: center;
+        }
+
+        h1 {
+            color: #fff;
+            font-size: 95px;
+            font-weight: bold;
+            margin-top: 20px;
+            text-align: center;
+            text-decoration: underline;
+        }
+
+        h2 {
+            color: #fff;
+            font-size: 60px;
+            font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 160px;
+            text-align: center;
+        }
+
+        iframe {
+            margin: 30px;
+            transform: scale(1.1);
+            align-content: center;
+        }
+        
+        h3 {
+            color: #fff;
+            font-size: 40px;
+            font-weight: bold;
+            margin-top: 50px;
+            text-align: left;
+        }
+    </style>
 </head>
 <body>
 
-    <h1>Welcome to My Dynamic Webpage</h1>
+    <h1>Welcome to Our Dynamic Webpage </h1>
 
-    <!-- Embed ThingSpeak charts using iframes with unique IDs -->
+    <h2>For Our Wireless Controller (The graphs of all our data)</h2>
     <iframe id="chart1" width="450" height="260" style="border: 1px solid #cccccc;" src=""></iframe>
     <iframe id="chart2" width="450" height="260" style="border: 1px solid #cccccc;" src=""></iframe>
     <iframe id="chart3" width="450" height="260" style="border: 1px solid #cccccc;" src=""></iframe>
@@ -17,10 +56,7 @@
     <iframe id="chart5" width="450" height="260" style="border: 1px solid #cccccc;" src=""></iframe>
     <iframe id="chart6" width="450" height="260" style="border: 1px solid #cccccc;" src=""></iframe>
 
-    <p>Some additional content goes here...</p>
-
     <script>
-        // Function to update the src attribute of the iframes with a timestamp
         function updateCharts() {
             var charts = ["chart1", "chart2", "chart3", "chart4", "chart5", "chart6"];
             var timestamp = new Date().getTime();
@@ -32,12 +68,9 @@
             });
         }
 
-        // Update charts every 5 minutes (adjust as needed)
         setInterval(updateCharts, 5 * 1000);
-        
-        // Initial update when the page loads
         updateCharts();
     </script>
-
+    <h3>Team 13</h3>
 </body>
 </html>
