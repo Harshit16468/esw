@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic ThingSpeak Charts</title>
+</head>
+<body>
+
+    <h1>Welcome to My Dynamic Webpage</h1>
+
+    <!-- Embed ThingSpeak charts using iframes with unique IDs -->
+    <iframe id="chart1" width="450" height="260" style="border: 1px solid #cccccc;" src=""></iframe>
+    <iframe id="chart2" width="450" height="260" style="border: 1px solid #cccccc;" src=""></iframe>
+    <iframe id="chart3" width="450" height="260" style="border: 1px solid #cccccc;" src=""></iframe>
+    <iframe id="chart4" width="450" height="260" style="border: 1px solid #cccccc;" src=""></iframe>
+    <iframe id="chart5" width="450" height="260" style="border: 1px solid #cccccc;" src=""></iframe>
+    <iframe id="chart6" width="450" height="260" style="border: 1px solid #cccccc;" src=""></iframe>
+
+    <p>Some additional content goes here...</p>
+
+    <script>
+        // Function to update the src attribute of the iframes with a timestamp
+        function updateCharts() {
+            var charts = ["chart1", "chart2", "chart3", "chart4", "chart5", "chart6"];
+            var timestamp = new Date().getTime();
+
+            charts.forEach(function(chartId) {
+                var iframe = document.getElementById(chartId);
+                iframe.src = "https://thingspeak.com/channels/2287708/charts/" + chartId.replace("chart", "") +
+                             "?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&update=15&t=" + timestamp;
+            });
+        }
+
+        // Update charts every 5 minutes (adjust as needed)
+        setInterval(updateCharts, 5 * 1000);
+        
+        // Initial update when the page loads
+        updateCharts();
+    </script>
+
+</body>
+</html>

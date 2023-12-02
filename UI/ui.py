@@ -27,6 +27,18 @@ datasets = [
         "data": [30, 25, 60, 70, 40],
         "borderColor": "rgba(54, 162, 235, 1)",
         "backgroundColor": "rgba(54, 162, 235, 0.2)"
+    },
+      {
+        "label": "Dataset 5",
+        "data": [65, 59, 80, 81, 56],
+        "borderColor": "rgba(75, 192, 192, 1)",
+        "backgroundColor": "rgba(75, 192, 192, 0.2)"
+    },
+        {
+        "label": "Dataset 6",
+        "data": [65, 59, 80, 81, 56],
+        "borderColor": "rgba(75, 192, 192, 1)",
+        "backgroundColor": "rgba(75, 192, 192, 0.2)"
     }
 ]
 

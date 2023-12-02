@@ -1,3 +1,5 @@
+#include <HTTPClient.h>
+
 /*
  * This ESP32 code is created by esp32io.com
  *
@@ -9,8 +11,9 @@
 #include <WiFi.h>
 #include <ThingSpeak.h>
 #include <PubSubClient.h>
-#define SERVER_PORT 4080
 
+#define SERVER_PORT 4080
+HTTPClient http;
 const char* ssid = "me20p";     // CHANGE TO YOUR WIFI SSID
 const char* password = "987654321"; // CHANGE TO YOUR WIFI PASSWORD
 int ChannelID = 2287708;
@@ -44,10 +47,36 @@ void mqttPublish(long pubChannelID, char* pubWriteAPIKey, float dataValue1, floa
   Serial.println(pubChannelID);
 }
 
+void httpPublish(float val1, float val2, float val3, float val4, float val5, float val6){
+    http.begin("127.0.0.1:5000/post_data/1");
+    int httpResponseCode = http.POST(String(val1));  // convert float to string
+     Serial.println("HTTP response code: " + String(httpResponseCode));
+    Serial.println("HTTP response body: " + http.getString());
+    http.end();
+     http.begin("127.0.0.1:5000/post_data/2");
+    httpResponseCode = http.POST(String(val2));  // convert float to string
+    Serial.print(httpResponseCode);
+    http.end();
+     http.begin("127.0.0.1:5000/post_data/3");
+    httpResponseCode = http.POST(String(val3));  // convert float to string
+    Serial.print(httpResponseCode);
+    http.end();
+     http.begin("127.0.0.1:5000/post_data/4");
+     httpResponseCode = http.POST(String(val4));  // convert float to string
+     Serial.print(httpResponseCode);
+    http.end();
+     http.begin("127.0.0.1:5000/post_data/5");
+     httpResponseCode = http.POST(String(val5));  // convert float to string
+     Serial.print(httpResponseCode);
+    http.end();
+     http.begin("127.0.0.1:5000/post_data/6");
+     httpResponseCode = http.POST(String(val6));  // convert float to string
+     Serial.println(httpResponseCode);
+    http.end();
+}
 
 void setup() {
   Serial.begin(115200);
-
   // Connect to Wi-Fi
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) {
@@ -117,6 +146,7 @@ void loop() {
   }
   mqttClient.loop();
     mqttPublish(ChannelID, APIKey, temperature, humidity, mq2reading, mq135reading,pressure,alt);
+    httpPublish(temperature, humidity, mq2reading, mq135reading,pressure,alt);
     client.stop();
   }
 
